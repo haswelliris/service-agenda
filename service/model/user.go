@@ -1,8 +1,6 @@
-package entity
+package model
 
 import (
-	"bufio"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"io/ioutil"
@@ -10,7 +8,7 @@ import (
 )
 
 type User struct {
-	UserName string
+	UserName string `xorm:"pk"`
 	Password string
 	Email    string
 	Phone    string
@@ -48,10 +46,15 @@ func GetCurUser() (string, error) {
 	return string(curUser), nil
 }
 
-func AddUser(userName string, password string, email string, phone string) {
+func AddUser(userName string, password string, email string, phone string) error {
 	user := &User{userName, password, email, phone}
 	users = append(users, user)
-	userWriteToFile()
+	// insert new user infomation into the database
+	_, err := Engine.Insert(user)
+	if err != nil {
+		return errors.New("write to database fail: \n->" + err.Error())
+	}
+	return nil
 }
 
 func DeleteUser(userName string) error {
@@ -61,7 +64,9 @@ func DeleteUser(userName string) error {
 	} else {
 		// delete user with given index
 		users = append(users[:index], users[index+1:]...)
-		userWriteToFile()
+		// delete user from the database
+		user := new(User)
+		Engine.ID(userName).Delete(user)
 	}
 	return nil
 }
@@ -79,65 +84,10 @@ func GetUsers() Users {
 	return users
 }
 
-func userEncode(user *User) ([]byte, error) {
-	encodedUser, err := json.Marshal(user)
-	if err != nil {
-		return nil, errors.New("user encode fail: " + err.Error())
-	}
-	return encodedUser, nil
-}
-
-func userDecode(encodedUser []byte) (*User, error) {
-	var user User
-	err := json.Unmarshal(encodedUser, &user)
-	if err != nil {
-		return nil, errors.New("user decode fail: " + err.Error())
-	}
-	return &user, nil
-}
-
-func userWriteToFile() error {
-	fout, err := os.Create("data/userInfo")
-	if err != nil {
-		return errors.New("write to file fail: \n->" + err.Error())
-	}
-	defer fout.Close()
-
-	for _, user := range users {
-		encodedUser, err := userEncode(user)
-		if err != nil {
-			return errors.New("write to file fail: \n->" + err.Error())
-		}
-		fmt.Fprintf(fout, "%s\n", encodedUser)
-	}
-
-	return nil
-}
-
-func userReadFromFile() error {
-	fin, err := os.Open("data/userInfo")
-	if err != nil {
-		return errors.New("user read from file fail: \n->" + err.Error())
-	}
-	defer fin.Close()
-
-	scanner := bufio.NewScanner(fin)
-
-	for scanner.Scan() {
-		token := scanner.Text()
-		user, err := userDecode([]byte(token))
-		if err != nil {
-			return errors.New("user read from file fail: \n->" + err.Error())
-		}
-		users = append(users, user)
-	}
-
-	return nil
+func userReadFromDB() {
+	Engine.Find(&users)
 }
 
 func init() {
-	err := userReadFromFile()
-	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-	}
+	userReadFromDB()
 }
