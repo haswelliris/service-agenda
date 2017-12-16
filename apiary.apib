@@ -1,0 +1,147 @@
+FORMAT: 1A
+HOST: http://agenda29.apiblueprint.org/
+
+# Agenda
+
+Agenda is a simple API allowing consumers to schedule meeting on-line
+
+# Group User
+
+Resource operations related to a user in the API.
+
+## User [/v1/user]
+
+### User Register [POST /v1/user/register]
+
+Register user account with specific infomation.
+
++ Request (application/json)
+
+        {
+            "username":"james",
+            "password":"123456",
+            "email":"james@qq.com",
+            "phone":"12345678912"
+        }
+
++ Response 201 (application/json)
+
+    + Body
+
+            {
+                "username":"james",
+                "email":"james@qq.com",
+                "phone":"12345678912"
+            }
+
+
+### User Login [GET /v1/user/login{?username,password}]
+
+User login.
+
++ Parameters
+    - username : `james` (string, required)
+    - password : `123456` (string, required)
+
++ Response 204
+
+
+### User Logout [POST /v1/user/logout]
+
+Logout the current login user.Resource operations related to a user in the API.
+
++ Response 204
+
+### User Delete [DELETE]
+
+Delete current login user.
+
++ Response 204
+
+
+# Group Users
+
+Resource operations related to users in the API.
+
+## Users Collection [/v1/users]
+
+### List All Users [GET]
+
+List all registered users' information except for passwords.
+
++ Response 200 (application/json)
+
+        [
+            {
+                "username":"zhang3"
+                "password":"zhang"
+                "email":"zhang3@mail2.sysu.edu.cn"
+            },{
+                "username":"li4"
+                "password":"li"
+                "email":"li4@mail2.sysu.edu.cn"
+            }
+        ]
+
+
+# Group Meeting
+
+Resource operations related to a meeting in the API.
+
+## Meeting [/v1/meeting]
+
+### Create Meeting [POST]
+
+Create a meeting.
+At least one participator should be provided.
+
++ Request (application/json)
+
+        {
+            "title":"Meeting1",
+            "sponsor":"zhang3",
+            "participators":["li4"],
+            "startTime":"2017-11-11/11:11",
+            "endTime":"2017-11-11/11:22"
+        }
+
++ Response 201 (application/json)
+
+    + Body
+
+            {
+                "title":"Meeting1",
+                "sponsor":"zhang3",
+                "participators":["li4"],
+                "startTime":"2017-11-11/11:11",
+                "endTime":"2017-11-11/11:22"
+            }
+
+
+# Group Meetings
+
+Resource operations related to meetings in the API.
+
+## Meetings Collection [/v1/meetings]
+
+### List All Meetings [GET]
+
+List all meetings attended by current login user.
+
++ Response 200 (application/json)
+
+        [
+            {### Change Participators []
+                "title":"Meeting1",
+                "sponsor":"zhang3",
+                "participators":["li4"],
+                "startTime":"2017-11-11/11:11",
+                "endTime":"2017-11-11/11:22"
+            },{
+                "title":"Meeting2",
+                "sponsor":"li4",
+                "participators":["zhang3"],
+                "startTime":"2017-12-12/12:12",
+                "endTime":"2017-12-12/12:22"
+            }
+        ]
