@@ -10,14 +10,11 @@ var Engine *xorm.Engine
 
 func init() {
 	// initialize xorm engine
-	engine, err := xorm.NewEngine("sqlite3", "./data/agenda.db")
-	println("err1")
+	engine, err := xorm.NewEngine("sqlite3", "./agenda.db")
 	checkErr(err)
 	engine.SetMapper(core.SameMapper{})
 	err = engine.Sync2(new(User), new(Meeting))
-	println("err2")
 	checkErr(err)
-	println("finish init")
 	Engine = engine
 }
 
