@@ -2,7 +2,6 @@ package model
 
 import (
 	"errors"
-	"fmt"
 )
 
 type User struct {
@@ -61,9 +60,7 @@ func DeleteUser(userName string) error {
 		return errors.New("delete user fail: " + err.Error())
 	} else {
 		// delete user with given index
-		fmt.Printf("%V\n", users)
 		users = append(users[:index], users[index+1:]...)
-		fmt.Printf("%V\n", users)
 		// delete user from the database
 		user := new(User)
 		Engine.ID(userName).Delete(user)
