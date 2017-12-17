@@ -1,8 +1,12 @@
 package service
 
-import "bytes"
-import "strings"
-import "github.com/haswelliris/service-agenda/service/model"
+import (
+	"bytes"
+	"fmt"
+	"strings"
+
+	"github.com/haswelliris/service-agenda/service/model"
+)
 
 // format: yyyy-mm-dd/hh:mm
 
@@ -86,8 +90,8 @@ func IsUserHaveTime(user string, start, end string) bool {
 	ss := Time2str(start)
 	ee := Time2str(end)
 	for _, meeting := range meetings {
-		s := util.Time2str(meeting.StartTime)
-		e := util.Time2str(meeting.EndTime)
+		s := Time2str(meeting.StartTime)
+		e := Time2str(meeting.EndTime)
 		if (s > ss && s < ee) ||
 			(e > ss && (e < ee || e == ee)) ||
 			(s < ss && e > e) {
@@ -102,4 +106,13 @@ func IsUserHaveTime(user string, start, end string) bool {
 		}
 	}
 	return true
+}
+
+func printMeeting(meeting model.Meeting) {
+	fmt.Printf("%s | %s | %s | %s | %v\n",
+		meeting.Title,
+		meeting.Sponsor,
+		meeting.StartTime,
+		meeting.EndTime,
+		meeting.Participators)
 }

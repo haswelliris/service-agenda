@@ -4,15 +4,11 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/unrolled/render"
 	"github.com/urfave/negroni"
-
-	"github.com/haswelliris/service-agenda/service/model"
 )
 
 // NewServer returns a negroni server that has already initialized
 // routes
 func NewServer() *negroni.Negroni {
-
-	model.init()
 
 	formatter := render.New(render.Options{IndentJSON: true})
 
@@ -30,7 +26,7 @@ func initRoutes(mx *mux.Router, formatter *render.Render) {
 	// ### user register
 	mx.HandleFunc("/v1/user/register", userRegisterHandler(formatter)).Methods("POST")
 	// ### user login
-	mx.HandleFunc("user/login", userLoginHandler(formatter)).Methods("GET")
+	mx.HandleFunc("/v1/user/login", userLoginHandler(formatter)).Methods("GET")
 	// ### user logout
 	mx.HandleFunc("/v1/user/logout", userLogoutHandler(formatter)).Methods("POST")
 
