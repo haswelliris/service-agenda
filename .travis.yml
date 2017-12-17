@@ -1,0 +1,13 @@
+language: go
+
+go:
+  - 1.8
+
+script:
+  - go build service/main.go
+  - go build cli/main.go
+  - go test ./service/model
+
+branches:
+  only:
+    - master

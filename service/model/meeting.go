@@ -58,18 +58,18 @@ func GetMeetings() Meetings {
 	return meetings
 }
 
-func UpdateParticipators(title string, participators []string) error {
-	index, _, err := GetMeeting(title)
-	if err != nil {
-		return errors.New("update participators fail: " + err.Error())
-	} else {
-		meetings[index].Participators = participators
-	}
-	meeting := new(Meeting)
-	meeting.Participators = participators
-	Engine.ID(title).Update(meeting)
-	return nil
-}
+// func UpdateParticipators(title string, participators []string) error {
+// 	index, _, err := GetMeeting(title)
+// 	if err != nil {
+// 		return errors.New("update participators fail: " + err.Error())
+// 	} else {
+// 		meetings[index].Participators = participators
+// 	}
+// 	meeting := new(Meeting)
+// 	meeting.Participators = participators
+// 	Engine.ID(title).Update(meeting)
+// 	return nil
+// }
 
 func meetingReadFromDB() {
 	Engine.Find(&meetings)

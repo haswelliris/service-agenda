@@ -2,9 +2,6 @@ package model
 
 import (
 	"errors"
-	"fmt"
-	"io/ioutil"
-	"os"
 )
 
 type User struct {
@@ -18,33 +15,33 @@ type Users []*User
 
 var users Users
 
-func UpdateCurUser(curUser string) error {
-	// write current login user into file
-	fout, err := os.Create("data/curUser")
-	if err != nil {
-		return errors.New("update current user fail: \n->" + err.Error())
-	}
-	defer fout.Close()
-	if err != nil {
-		return errors.New("update current user fail: \n->" + err.Error())
-	}
-	fmt.Fprintf(fout, "%s", curUser)
-	return nil
-}
+// func UpdateCurUser(curUser string) error {
+// 	// write current login user into file
+// 	fout, err := os.Create("data/curUser")
+// 	if err != nil {
+// 		return errors.New("update current user fail: \n->" + err.Error())
+// 	}
+// 	defer fout.Close()
+// 	if err != nil {
+// 		return errors.New("update current user fail: \n->" + err.Error())
+// 	}
+// 	fmt.Fprintf(fout, "%s", curUser)
+// 	return nil
+// }
 
-func GetCurUser() (string, error) {
-	// read current login user from file and return it
-	fin, err := os.Open("data/curUser")
-	if err != nil {
-		return "", errors.New("get current user fail: \n->" + err.Error())
-	}
-	defer fin.Close()
-	curUser, err := ioutil.ReadAll(fin)
-	if err != nil {
-		return "", errors.New("get current user fail: \n->" + err.Error())
-	}
-	return string(curUser), nil
-}
+// func GetCurUser() (string, error) {
+// 	// read current login user from file and return it
+// 	fin, err := os.Open("data/curUser")
+// 	if err != nil {
+// 		return "", errors.New("get current user fail: \n->" + err.Error())
+// 	}
+// 	defer fin.Close()
+// 	curUser, err := ioutil.ReadAll(fin)
+// 	if err != nil {
+// 		return "", errors.New("get current user fail: \n->" + err.Error())
+// 	}
+// 	return string(curUser), nil
+// }
 
 func AddUser(userName string, password string, email string, phone string) error {
 	user := &User{userName, password, email, phone}
